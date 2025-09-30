@@ -1,0 +1,70 @@
+<section hlmCard class="border-t-4 border-t-primary/50">
+  <div hlmCardHeader class="bg-gradient-to-br from-primary/5 to-transparent">
+    <h2 hlmCardTitle class="text-xl flex items-center gap-2">
+      <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      Rating Summary
+    </h2>
+  </div>
+
+  <div hlmCardContent>
+    <!-- Loading State -->
+    <div *ngIf="isLoading()" class="flex justify-center py-12">
+      <div class="animate-pulse text-muted-foreground">Loading ratings...</div>
+    </div>
+
+    <!-- Rating Summary -->
+    <div *ngIf="!isLoading() && ratingSummary()" class="space-y-6">
+      <!-- Average Rating Display -->
+      <div class="flex flex-col items-center text-center py-6 px-4 bg-gradient-to-br from-primary/5 to-transparent rounded-lg border border-primary/10">
+        <div class="relative">
+          <div class="absolute inset-0 bg-primary/10 rounded-full blur-2xl"></div>
+          <div class="relative text-7xl font-bold bg-gradient-to-br from-primary to-primary/70 bg-clip-text text-transparent mb-3">
+            {{ ratingSummary()!.averageRating | number:'1.1-1' }}
+          </div>
+        </div>
+        <div class="mb-3 scale-110">
+          <app-star-rating [rating]="ratingSummary()!.averageRating" [readonly]="true" />
+        </div>
+        <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+          Based on {{ ratingSummary()!.totalReviews }} {{ ratingSummary()!.totalReviews === 1 ? 'review' : 'reviews' }}
+        </p>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-border"></div>
+
+      <!-- Rating Distribution Bars -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+          Rating Distribution
+        </h3>
+        <div *ngFor="let dist of ratingDistribution()" class="flex items-center gap-3 group">
+          <span class="text-sm font-semibold text-foreground w-12 flex items-center gap-1">
+            {{ dist.stars }}<span class="text-amber-500 group-hover:scale-110 transition-transform">★</span>
+          </span>
+          <div class="flex-1 bg-gradient-to-r from-muted to-muted/50 rounded-full h-3.5 overflow-hidden shadow-inner">
+            <div
+              class="bg-gradient-to-r from-amber-400 to-amber-500 h-full transition-all duration-500 ease-out shadow-sm"
+              [style.width.%]="dist.percentage">
+            </div>
+          </div>
+          <span class="text-sm font-semibold text-muted-foreground w-14 text-right tabular-nums">
+            {{ dist.count }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading() && !ratingSummary()" class="text-center py-12">
+      <div class="text-5xl mb-4 text-muted-foreground opacity-50">★</div>
+      <p class="text-sm text-muted-foreground font-medium">No ratings available yet.</p>
+      <p class="text-xs text-muted-foreground mt-2">Be the first to rate this movie!</p>
+    </div>
+  </div>
+</section>

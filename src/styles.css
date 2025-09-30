@@ -1,0 +1,50 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import '@angular/cdk/overlay-prebuilt.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  :root {
+    /* Froly color palette */
+    --color-froly-50: #fff1f2;
+    --color-froly-100: #fee5e6;
+    --color-froly-200: #fdced3;
+    --color-froly-300: #fba6af;
+    --color-froly-400: #f87082;
+    --color-froly-500: #f0435e;
+    --color-froly-600: #dd2148;
+    --color-froly-700: #ba163c;
+    --color-froly-800: #9c1538;
+    --color-froly-900: #861537;
+    --color-froly-950: #4b0619;
+
+    /* Theme colors using Froly */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 351 84% 59%; /* Froly-500 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 351 95% 96%; /* Froly-50 */
+    --secondary-foreground: 351 61% 39%; /* Froly-700 */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 351 90% 90%; /* Froly-200 */
+    --accent-foreground: 351 74% 22%; /* Froly-950 */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 351 84% 59%; /* Froly-500 */
+    --radius: 0.5rem;
+  }
+}

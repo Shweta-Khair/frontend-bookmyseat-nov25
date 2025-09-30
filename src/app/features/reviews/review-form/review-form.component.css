@@ -1,0 +1,8 @@
+/* Additional styles if needed */
+
+textarea {
+  vertical-align: top;
+  line-height: 1.5;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}

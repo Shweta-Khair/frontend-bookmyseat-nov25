@@ -1,0 +1,44 @@
+<section hlmCard class="relative overflow-hidden hover:shadow-2xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer group border-l-4 border-l-primary/30">
+  <!-- Decorative gradient overlay -->
+  <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full transition-all duration-300 group-hover:scale-110"></div>
+  
+  <div hlmCardHeader class="relative">
+    <h3 hlmCardTitle class="text-lg group-hover:text-primary transition-colors line-clamp-2 mb-2">
+      {{ movie.title }}
+    </h3>
+    <div class="flex flex-wrap gap-2">
+      <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+        {{ movie.genre }}
+      </span>
+      <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+        {{ movie.language }}
+      </span>
+    </div>
+  </div>
+
+  <div hlmCardContent class="relative">
+    <p class="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
+      {{ movie.description }}
+    </p>
+
+    <div class="flex items-center justify-between pt-2 border-t border-border">
+      <span class="text-sm font-semibold text-foreground flex items-center gap-2">
+        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        {{ movie.durationMinutes | duration }}
+      </span>
+      <a [routerLink]="['/movies', movie.id]" 
+         hlmBtn 
+         size="sm" 
+         class="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm hover:shadow-md transition-all group-hover:scale-105">
+        <span class="flex items-center gap-1.5">
+          View
+          <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>

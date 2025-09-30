@@ -1,0 +1,13 @@
+{
+  "$schema": "https://spartan.ng/schema.json",
+  "sourceDirectory": "./src/app/shared/ui",
+  "typescript": true,
+  "tailwind": {
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils"
+  }
+}

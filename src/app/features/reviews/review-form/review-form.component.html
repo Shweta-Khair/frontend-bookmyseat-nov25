@@ -1,0 +1,82 @@
+<section hlmCard>
+  <div hlmCardHeader>
+    <h3 hlmCardTitle>Write a Review</h3>
+    <p hlmCardDescription>Share your thoughts about this movie</p>
+  </div>
+
+  <div hlmCardContent>
+    <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- User Name Field -->
+      <div>
+        <label hlmLabel for="userName" class="mb-2 block">Your Name</label>
+        <input
+          hlmInput
+          type="text"
+          id="userName"
+          formControlName="userName"
+          placeholder="Enter your name"
+          class="w-full"
+        />
+        <p
+          *ngIf="userNameControl?.invalid && userNameControl?.touched"
+          class="text-sm text-destructive mt-2">
+          <span *ngIf="userNameControl?.errors?.['required']">Name is required</span>
+          <span *ngIf="userNameControl?.errors?.['maxlength']">Name must be less than 100 characters</span>
+        </p>
+      </div>
+
+      <!-- Rating Field -->
+      <div>
+        <label hlmLabel class="mb-2 block">Your Rating</label>
+        <div class="mt-3">
+          <app-star-rating formControlName="rating" />
+        </div>
+        <p
+          *ngIf="ratingControl?.invalid && ratingControl?.touched"
+          class="text-sm text-destructive mt-2">
+          Please select a rating
+        </p>
+      </div>
+
+      <!-- Comment Field -->
+      <div>
+        <label hlmLabel for="comment" class="mb-2 block">Your Review (Optional)</label>
+        <textarea
+          hlmInput
+          id="comment"
+          formControlName="comment"
+          placeholder="Tell us what you thought about the movie..."
+          rows="4"
+          class="w-full resize-none"
+        ></textarea>
+        <p
+          *ngIf="commentControl?.invalid && commentControl?.touched"
+          class="text-sm text-destructive mt-2">
+          Comment must be less than 1000 characters
+        </p>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="successMessage()" class="p-4 bg-green-50 border border-green-200 rounded-md">
+        <p class="text-sm text-green-800">{{ successMessage() }}</p>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage()" class="p-4 bg-red-50 border border-red-200 rounded-md">
+        <p class="text-sm text-red-800">{{ errorMessage() }}</p>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="pt-2">
+        <button
+          hlmBtn
+          type="submit"
+          [disabled]="reviewForm.invalid || isSubmitting()"
+          class="w-full">
+          <span *ngIf="!isSubmitting()">Submit Review</span>
+          <span *ngIf="isSubmitting()">Submitting...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

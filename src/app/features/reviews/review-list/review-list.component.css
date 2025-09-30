@@ -1,0 +1,11 @@
+/* Additional styles if needed */
+
+/* Smooth hover effect for review cards */
+.bg-muted\/30 {
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+/* Ensure proper spacing for user avatar + content */
+.pl-13 {
+  padding-left: 3.25rem;
+}

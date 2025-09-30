@@ -1,0 +1,12 @@
+/* Additional styles if needed */
+
+/* Smooth animation for rating bars */
+.bg-amber-500 {
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    width: 0%;
+  }
+}
