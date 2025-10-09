@@ -1,13 +1,4 @@
 // Jenkinsfile for React Microservice (e.g., app-react)
-// Adapted for Node.js: Uses npm for build/test, ESLint for basic SAST (integrated in Sonar).
-// Assumes React app dockerized for EKS deployment.
-// Multi-branch strategy: CI on all, Deploy on 'main'.
-// DevSecOps: Sonar for JS SAST/lint, Trivy for container.
-// Jenkinsfile for React Microservice (e.g., app-react)
-// Adapted for Node.js: Uses npm for build/test, ESLint for basic SAST (integrated in Sonar).
-// Assumes React app dockerized for EKS deployment.
-// Multi-branch strategy: CI on all, Deploy on 'main'.
-// DevSecOps: Sonar for JS SAST/lint, Trivy for container.
 pipeline { 
     agent { label 'Linux-slave-1' } // Runs on Slave-1 or Slave-2
     /*tools {
@@ -35,8 +26,16 @@ pipeline {
             steps {
                 sh 'npm ci'
                 sh 'npm run lint' // Basic JS SAST via ESLint
-                withSonarQubeEnv('SonarCloud') {
-                    sh 'sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=. -Dsonar.tests=src -Dsonar.test.inclusions=**/*.test.js,**/*.spec.js -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info -Dsonar.login=${SONAR_TOKEN}'
+                withSonarQubeEnv('SonarQube') {
+                    sh '''
+                    sonar-scanner \
+                    -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                    -Dsonar.sources=src \
+                    -Dsonar.test.inclusions=**/*.test.js,**/*.spec.js \
+                    -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+
+                     '''
+                    // -Dsonar.login=${SONAR_TOKEN}'
                 }
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
