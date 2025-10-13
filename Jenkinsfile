@@ -35,13 +35,13 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Build') {
             steps {
                 sh 'npm run build'
             }
         }
-
+        
         stage('SAST Scan') {
             steps {
                 script {
@@ -64,7 +64,7 @@ pipeline {
                     }
                 }
             }
-        }
+        } // <-- Add missing closing bracket for previous stage
 
         stage('Container Security Scan') {
             steps {
@@ -75,6 +75,9 @@ pipeline {
                         
                         ]) {
                         sh '''
+                        # Create reports folder if not exists
+                        mkdir -p reports
+                        
                             set -e 
                         # Ensure AWS credentials are available as environment variables
                         export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
@@ -89,13 +92,35 @@ pipeline {
                         
                         echo "Pushing image..."
                         docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/movieapp-frontend:${BUILD_NUMBER}
+                        sleep 2
+                        
+                        # Download Trivy HTML template
+                        curl -L -o reports/html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl
+                
+                     echo "🔍 Running Trivy vulnerability + secret scan (remote mode)..."
+                     trivy image --exit-code 1 --no-progress \
+                        --severity HIGH,CRITICAL \
+                        --cache-dir /tmp/trivy-cache \
+                        --timeout 10m \
+                        --scanners vuln,secret \
+                        --username AWS \
+                        --password "$(aws ecr get-login-password --region $AWS_REGION)" \
+                        $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/movieapp-frontend:${BUILD_NUMBER} \
+                        --format json -o reports/trivy-report.json
+                        
+                        echo "Generating readable HTML report..."
+                            trivy convert \
+                            --format template \
+                            --template reports/html.tpl \
+                            -o reports/trivy-report.html \
+                            reports/trivy-report.json 
                         '''
                     }
-                   // sh "trivy image --exit-code 1 --no-progress ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/movieapp-frontend:${BUILD_NUMBER}"
                 }
-            }
+            }    
+           
         }
-    }
+    } 
 
     post {
         always {
@@ -103,4 +128,4 @@ pipeline {
             stash includes: 'node_modules/**', name: 'npm-cache', useDefaultExcludes: false
         }
     }
-}
+} 
