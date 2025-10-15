@@ -13,13 +13,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[
-                        url: 'git@github.com:ALMGHAS/bookmyseat-frontend-service.git',
-                        credentialsId: 'github-private-creds'
-                    ]]
-                ])
+                // Automatically checks out the current branch (main, develop, feature/*, etc.)
+                checkout scm //added for multibranch pipeline
             }
         }
 
@@ -67,6 +62,12 @@ pipeline {
         } // <-- Add missing closing bracket for previous stage
 
         stage('Container Security Scan') {
+          when {  // Optional: Example conditional to run only on main/develop
+                anyOf {
+                    branch 'main'
+                    branch 'feature-1'
+                }
+            }
             steps {
                 script {
                     withCredentials([
