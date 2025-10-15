@@ -111,8 +111,6 @@ pipeline {
                     }
                 }
             }    
-           
-        }
     } 
 
     post {
