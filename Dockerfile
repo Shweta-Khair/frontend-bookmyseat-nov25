@@ -1,7 +1,14 @@
-# In jenkins CI building application so directly copying output directory to container
-# Stage: Serve with Nginx
+# Stage 1: Build
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build -- --configuration=production
+
+# Stage 2: Serve with Nginx
 FROM nginx:alpine
-COPY dist/frontend-service/browser /usr/share/nginx/html
+COPY --from=build /app/dist/frontend-service/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
