@@ -1,14 +1,15 @@
-version: '3.8'
-
 services:
   frontend-service:
     build: .
     container_name: frontend-service
     ports:
       - "4200:80"
-    depends_on:
-      - movie-service
-      - review-service
+    environment:
+      - MOVIE_SERVICE_URL=http://movie-service:8081/api/v1
+      - REVIEW_SERVICE_URL=http://review-service:8082/api/v1
+        #    depends_on:
+        # - movie-service
+        # - review-service
     networks:
       - bookmyseat-network
     healthcheck:
@@ -20,4 +21,4 @@ services:
 
 networks:
   bookmyseat-network:
-    driver: bridge
+    external: true
