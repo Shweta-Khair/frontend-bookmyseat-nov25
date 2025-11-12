@@ -1,10 +1,107 @@
+# ==========================================
+# FRONTEND NGINX CONFIG (ConfigMap)
+# ==========================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-nginx-config
+  namespace: movie
+data:
+  nginx.conf: |
+    events {
+      worker_connections 1024;
+    }
+
+    http {
+      include       /etc/nginx/mime.types;
+      default_type  application/octet-stream;
+      sendfile      on;
+      keepalive_timeout 65;
+
+      server {
+        listen 80;
+        server_name _;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # ===================================
+        # GZIP COMPRESSION
+        # ===================================
+        gzip on;
+        gzip_types text/plain text/css application/json application/javascript text/xml application/xml;
+
+        # ===================================
+        # FRONTEND (Angular SPA)
+        # ===================================
+        location / {
+          try_files $uri $uri/ /index.html;
+        }
+
+        # ===================================
+        # MOVIE SERVICE (Backend)
+        # ===================================
+        location /api/movies/ {
+          proxy_pass http://movie-service:8081/api/v1/;
+          proxy_http_version 1.1;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # ===================================
+        # REVIEW SERVICE (Backend)
+        # ===================================
+        location /api/reviews/ {
+          # ✅ fixed path handling
+          proxy_pass http://review-service:8082/api/v1/;
+          proxy_http_version 1.1;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_connect_timeout 60s;
+          proxy_send_timeout 60s;
+          proxy_read_timeout 60s;
+        }
+
+        # ===================================
+        # ERROR HANDLING
+        # ===================================
+        error_page 502 503 504 /custom_50x.html;
+        location = /custom_50x.html {
+          root /usr/share/nginx/html;
+          internal;
+        }
+
+        # ===================================
+        # SECURITY HEADERS
+        # ===================================
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+      }
+    }
+
+---
+# ==========================================
+# FRONTEND DEPLOYMENT
+# ==========================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-service
   namespace: movie
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-service
   template:
+    metadata:
+      labels:
+        app: frontend-service
     spec:
       containers:
         - name: frontend-service
@@ -31,3 +128,20 @@ spec:
         - name: nginx-config
           configMap:
             name: frontend-nginx-config
+
+---
+# ==========================================
+# FRONTEND SERVICE
+# ==========================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: movie
+spec:
+  selector:
+    app: frontend-service
+  ports:
+    - port: 80
+      targetPort: 80
+  type: LoadBalancer
