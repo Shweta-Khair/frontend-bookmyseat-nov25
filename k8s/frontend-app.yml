@@ -105,7 +105,7 @@ spec:
     spec:
       containers:
         - name: frontend-service
-          image: 543816070942.dkr.ecr.us-east-1.amazonaws.com/bookmyseat-frontend-s:5
+          image: 543816070942.dkr.ecr.us-east-1.amazonaws.com/bookmyseat-frontend-s:6
           ports:
             - containerPort: 80
           volumeMounts:
