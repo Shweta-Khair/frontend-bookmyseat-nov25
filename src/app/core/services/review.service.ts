@@ -20,18 +20,18 @@ export class ReviewService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<ReviewPage>(`${this.baseUrl}/reviews/movie/${movieId}`, { params }).pipe(
+    return this.http.get<ReviewPage>(`${this.baseUrl}/movie/${movieId}`, { params }).pipe(
       tap(() => this.isLoading.set(false))
     );
   }
 
   getMovieRating(movieId: number): Observable<RatingSummary> {
-    return this.http.get<RatingSummary>(`${this.baseUrl}/reviews/movie/${movieId}/rating`);
+    return this.http.get<RatingSummary>(`${this.baseUrl}/movie/${movieId}/rating`);
   }
 
   submitReview(review: ReviewSubmission): Observable<Review> {
     this.isSubmitting.set(true);
-    return this.http.post<Review>(`${this.baseUrl}/reviews`, review).pipe(
+    return this.http.post<Review>(`${this.baseUrl}`, review).pipe(
       tap(() => this.isSubmitting.set(false))
     );
   }
