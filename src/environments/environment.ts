@@ -1,6 +1,6 @@
 export const environment = {
   movieServiceUrl: '/api/movies',
-  reviewServiceUrl: '/api/review',  // Changed from reviews to review
+  reviewServiceUrl: '/api/reviews', 
   enableTracing: true
 };
 
